@@ -1,24 +1,41 @@
-'use strict';
+"use strict";
 
-const supertest = require('supertest'); 
-const test = require('unit.js');
-const app = require('../app.js');
+const generateSlug = require("../server/utils/slugify.js");
+const assert = require("assert");
 
-const request = supertest(app);
+const MockUser = {
+  slugs: ["john-jonhson-jr", "john-jonhson-jr-1", "john"],
+  findOne({ slug }) {
+    if (this.slugs.includes(slug)) {
+      return Promise.resolve({ id: "id" });
+    }
 
-describe('Tests app', function() {
-  it('verifies get', function(done) {
-    request.get('/').expect(200).end(function(err, result) {
-        test.string(result.body.Output).contains('Hello');
-        test.value(result).hasHeader('content-type', 'application/json; charset=utf-8');
-        done(err);
+    return Promise.resolve(null);
+  }
+};
+
+describe("slugify", function() {
+  it("no duplication", function() {
+    assert(1);
+
+    return generateSlug(MockUser, "John Jonhson.").then(slug => {
+      assert.equal(slug, "john-jonhson");
     });
   });
-  it('verifies post', function(done) {
-    request.post('/').expect(200).end(function(err, result) {
-        test.string(result.body.Output).contains('Hello');
-        test.value(result).hasHeader('content-type', 'application/json; charset=utf-8');
-        done(err);
+
+  it("one duplication", function() {
+    assert(1);
+
+    return generateSlug(MockUser, "John.").then(slug => {
+      assert.equal(slug, "john-1");
+    });
+  });
+
+  it("multiple duplications", function() {
+    assert(1);
+
+    return generateSlug(MockUser, "John Jonhson Jr.").then(slug => {
+      assert.equal(slug, "john-jonhson-jr-2");
     });
   });
 });
