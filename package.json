@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
+    "babel-register": "^6.26.0",
     "eslint": "^5.11.1",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-prettier": "^3.3.0",
@@ -44,7 +45,7 @@
     "unit.js": "2.0.0"
   },
   "scripts": {
-    "test": "mocha --recursive tests",
+    "test": "mocha --recursive tests --require babel-register",
     "dev": "nodemon app.js --exec babel-node --presets=@babel/preset-env",
     "build": "next build",
     "start": "node app.js",
