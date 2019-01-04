@@ -1,7 +1,15 @@
-import React from "react";
-import Document, { Head, Main, NextScript } from "next/document";
-import JssProvider from "react-jss/lib/JssProvider";
-import getContext from "../lib/context";
+import React from 'react';
+import Document, { Head, Main, NextScript } from 'next/document';
+import JssProvider from 'react-jss/lib/JssProvider';
+import htmlescape from 'htmlescape';
+
+import getContext from '../lib/context';
+
+const { StripePublishableKey } = process.env;
+// console.log(StripePublishableKey);
+
+const env = { StripePublishableKey };
+// console.log(env);
 
 class MyDocument extends Document {
   render() {
@@ -9,10 +17,7 @@ class MyDocument extends Document {
       <html lang="en">
         <Head>
           <meta charSet="utf-8" />
-          <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1.0"
-          />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <meta name="google" content="notranslate" />
           <meta name="theme-color" content="#1976D2" />
 
@@ -28,10 +33,7 @@ class MyDocument extends Document {
             rel="stylesheet"
             href="https://storage.googleapis.com/builderbook/nprogress.min.css"
           />
-          <link
-            rel="stylesheet"
-            href="https://storage.googleapis.com/builderbook/vs.min.css"
-          />
+          <link rel="stylesheet" href="https://storage.googleapis.com/builderbook/vs.min.css" />
 
           <style>
             {`
@@ -68,15 +70,17 @@ class MyDocument extends Document {
         </Head>
         <body
           style={{
-            font: "16px Muli",
-            color: "#222",
-            margin: "0px auto",
-            fontWeight: "300",
-            lineHeight: "1.5em",
-            backgroundColor: "#F7F9FC"
+            font: '16px Muli',
+            color: '#222',
+            margin: '0px auto',
+            fontWeight: '300',
+            lineHeight: '1.5em',
+            backgroundColor: '#F7F9FC',
           }}
         >
           <Main />
+          {/* eslint-disable-next-line react/no-danger */}
+          <script dangerouslySetInnerHTML={{ __html: `__ENV__ = ${htmlescape(env)}` }} />
           <NextScript />
         </body>
       </html>
@@ -87,7 +91,7 @@ class MyDocument extends Document {
 MyDocument.getInitialProps = ({ renderPage }) => {
   const pageContext = getContext();
 
-  const page = renderPage(Component => props => (
+  const page = renderPage((Component) => (props) => (
     <JssProvider
       registry={pageContext.sheetsRegistry}
       generateClassName={pageContext.generateClassName}
@@ -104,10 +108,10 @@ MyDocument.getInitialProps = ({ renderPage }) => {
         id="jss-server-side"
         // eslint-disable-next-line
         dangerouslySetInnerHTML={{
-          __html: pageContext.sheetsRegistry.toString()
+          __html: pageContext.sheetsRegistry.toString(),
         }}
       />
-    )
+    ),
   };
 };
 
